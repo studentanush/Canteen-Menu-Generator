@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserPage from "./UserPage";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function UserLogin() {
     const[email,setEmail] = useState("");
@@ -11,26 +13,38 @@ export default function UserLogin() {
     
     const onSubmitHandler = async(e)=>{
         e.preventDefault();
-        //setloading(true);
-        setLogin(true);
+        setloading(true);
+        
         try {
-            const formdata = FormData();
-            formdata.append("email",email);
-            formdata.append("password",password);
-            const response = 0;//fetch backend API
-            if(response){
-                setLogin(true);
+            // const formdata = FormData();
+            // formdata.append("email",email);
+            // formdata.append("password",password);
+            const response = await axios.post("http://localhost:4000/api/userlogin",{
+                email:email,
+                password:password
+            });//fetch backend API
+            console.log(response.data)
+            if(response.data.user==null){
+                toast.success("Successfully login");
+                setEmail("");
+                setPassword("");
+                
+                navigate("/user-page");
+                
+            }else{
+                setloading(false);
+                toast.error("User not found..");
             }
         } catch (error) {
-            
+            toast.error("error Occured");
         }
-        //setloading(false);
+        setloading(false);
     }
   return loading? (
-    <div className="grid place-items-center min-h-[80vh]">
-        <div className="w-16 h-16 place-self-center border-4 border-gray-400 border-t-blue-800 rounded-full animate-spin"></div>
+    <div className="grid place-items-center min-h-[100vh]">
+        <div className="w-14 h-14 place-self-center border-4 border-gray-400 border-t-blue-800 rounded-full animate-spin"></div>
     </div>
-) : ( login? <UserPage/>:(<form onSubmit={onSubmitHandler} className=" h-screen grid place-content-center text-gray-600 ">
+) : ( (<form onSubmit={onSubmitHandler} className=" h-screen grid place-content-center text-gray-600 ">
         <div className=" w-120 h-80 bg-white shadow-[0_0_12px_rgba(0,0,0,0.1)] rounded-b-md gap-6 flex flex-col">
             <p className="text-black font-bold flex justify-center mt-7 text-2xl">Login</p>
             <div className="flex justify-center items-center">
