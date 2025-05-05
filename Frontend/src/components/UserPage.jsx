@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { nameContext } from "./UserLogin";
+import { ContextAPI } from "./Context";
 
 const UserPage = () => {
     const [rating, setRating] = useState(0);
     const [feedback, setFeedback] = useState("");
-
+    const { name, pdfUrl } = useContext(ContextAPI);
+    console.log(name);
+    console.log(pdfUrl);
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 py-8 px-4">
             <div className="max-w-4xl mx-auto space-y-8">
@@ -11,19 +15,23 @@ const UserPage = () => {
                 {/* Header */}
                 <div className="text-center">
                     <h1 className="text-4xl font-extrabold text-green-700 ">🍽️ Canteen Menu Portal</h1>
-                    <p className="text-gray-600 mt-2 text-lg">Welcome! Stay updated with today’s meals and share your feedback.</p>
+                    <p className="text-gray-600 mt-2 text-lg">`Welcome {name} ! Stay updated with today’s meals and share your feedback.`</p>
                 </div>
 
                 {/* Weekly Menu PDF */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 transition hover:shadow-xl">
-                    <h2 className="text-2xl font-semibold mb-3 text-green-700">📄 Weekly Menu</h2>
-                    <a
-                        href="#"
-                        className="text-blue-600 hover:text-blue-800 underline text-lg"
-                    >
-                        Download this week’s menu (PDF)
-                    </a>
-                </div>
+                {pdfUrl && (
+                    <div className="bg-white rounded-2xl shadow-lg p-6 transition hover:shadow-xl mt-6">
+                        <h2 className="text-2xl font-semibold mb-3 text-green-700">📄 Weekly Menu</h2>
+                        <a
+                            href={pdfUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 underline text-lg"
+                        >
+                            Download this week’s menu (PDF)
+                        </a>
+                    </div>
+                )}
 
                 {/* Today's Menu */}
                 <div className="bg-white rounded-2xl shadow-lg p-6 transition hover:shadow-xl">

@@ -19,22 +19,29 @@ app.post("/api/userlogin", async (req, res) => {
 
         });
         console.log(user);
-        if (user != null) {
+        if (user) {
+            const Name = user.name;
+            console.log(Name);
             const passwordMatch = await bcrypt.compare(password, user.password);
+            console.log(passwordMatch);
             if (passwordMatch) {
                 const token = jwt.sign({
                     id: user._id.toString(),
                 }, JWT_SECRET);
                 res.json({
+                    Name:Name,
                     token: token,
+                    user:true
                 })
             } else {
                 res.json({
                     message: "Invalid credentials",
+                    user:false
                 })
             }
         } else {
             res.json({
+                
                 msg: "user not found"
             })
         }
