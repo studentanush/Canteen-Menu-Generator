@@ -3,7 +3,7 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import connectMB from "./src/connectMB.js";
-import { adminModel, userModel } from "./src/database.js";
+import { adminModel, feedbackModel, userModel } from "./src/database.js";
 const JWT_SECRET = "i Love *****";
 const app = express();
 app.use(express.json());
@@ -103,6 +103,36 @@ app.post("/api/adminlogin", async (req, res) => {
     res.json({
         msg: "successfully login"
     })
+
+})
+app.post("/api/feedback",async(req,res)=>{
+    const Feedback = req.body.Feedback;
+    const Name = req.body.Name;
+    const date = req.body.date;
+    console.log(Feedback);
+    try {
+        await feedbackModel.create({
+            feedback:Feedback,
+            name:Name,
+            date:date
+        })
+        res.json({
+            success:true,
+        })
+    } catch (error) {
+        res.json({
+            success:false,
+        })
+    }
+    
+})
+app.get("/api/feedback",async(req,res)=>{
+    const response = await feedbackModel.find({});
+    console.log(response);
+    res.json({
+        response,
+    })
+
 
 })
 

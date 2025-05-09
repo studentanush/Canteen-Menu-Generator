@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify";
-import AdminPage from "./AdminPage";
+//import AdminPage from "./AdminPage";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const AdminLogin = ()=>{
