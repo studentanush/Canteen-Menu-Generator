@@ -3,12 +3,15 @@ import { ContextAPI } from "./Context";
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { toast } from "react-toastify";
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const breakfastOptions = ["Idli", "Dosa", "Poha", "Paratha", "Upma", "Bread Omelette"];
 
 export default function AdminPage() {
+    const { setPdfUrl } = useContext(ContextAPI)
     const [feedback, setFeedback] = useState([{}]);
+    const [visible, setVisible] = useState(false);
     const [menu, setMenu] = useState(
         days.map(day => ({
             day,
@@ -27,7 +30,7 @@ export default function AdminPage() {
             dinnerSalad: ""
         }))
     );
-
+    // console.log(menu.day);
     const [tab, setTab] = useState("edit");
     const [currentDayIndex, setCurrentDayIndex] = useState(0);
 
@@ -37,39 +40,48 @@ export default function AdminPage() {
         setMenu(updated);
     };
 
-    const generatePDF = () => {
-        const doc = new jsPDF("landscape", "pt", "A4"); // Landscape for wider table
+    const generatePDF = async (e) => {
+        e.preventDefault();
+        const doc = new jsPDF("landscape", "pt", "A4");
 
         doc.setFontSize(22);
         doc.setTextColor(40);
         doc.text("Weekly Canteen Menu", 40, 50);
 
-        const columns = [
+        // Columns for Lunch
+        const lunchColumns = [
             { header: "Day", dataKey: "day" },
-            { header: "Breakfast", dataKey: "breakfast" },
-            { header: "Lunch: Dry Veg", dataKey: "lunchDryVeg" },
-            { header: "Lunch: Gravy Veg", dataKey: "lunchGravyVeg" },
-            { header: "Lunch: Rice", dataKey: "lunchRice" },
-            { header: "Lunch: Dal", dataKey: "lunchDal" },
-            { header: "Lunch: Chapati", dataKey: "lunchChapati" },
-            { header: "Lunch: Salad", dataKey: "lunchSalad" },
-            { header: "Dinner: Dry Veg", dataKey: "dinnerDryVeg" },
-            { header: "Dinner: Gravy Veg", dataKey: "dinnerGravyVeg" },
-            { header: "Dinner: Rice", dataKey: "dinnerRice" },
-            { header: "Dinner: Dal", dataKey: "dinnerDal" },
-            { header: "Dinner: Chapati", dataKey: "dinnerChapati" },
-            { header: "Dinner: Salad", dataKey: "dinnerSalad" },
+            { header: "Dry Veg", dataKey: "lunchDryVeg" },
+            { header: "Gravy Veg", dataKey: "lunchGravyVeg" },
+            { header: "Rice", dataKey: "lunchRice" },
+            { header: "Dal", dataKey: "lunchDal" },
+            { header: "Chapati", dataKey: "lunchChapati" },
+            { header: "Salad", dataKey: "lunchSalad" },
         ];
 
-        const rows = menu.map(day => ({
+        // Columns for Dinner
+        const dinnerColumns = [
+            { header: "Day", dataKey: "day" },
+            { header: "Dry Veg", dataKey: "dinnerDryVeg" },
+            { header: "Gravy Veg", dataKey: "dinnerGravyVeg" },
+            { header: "Rice", dataKey: "dinnerRice" },
+            { header: "Dal", dataKey: "dinnerDal" },
+            { header: "Chapati", dataKey: "dinnerChapati" },
+            { header: "Salad", dataKey: "dinnerSalad" },
+        ];
+
+        const lunchRows = menu.map(day => ({
             day: day.day,
-            breakfast: day.breakfast,
             lunchDryVeg: day.lunchDryVeg,
             lunchGravyVeg: day.lunchGravyVeg,
             lunchRice: day.lunchRice,
             lunchDal: day.lunchDal,
             lunchChapati: day.lunchChapati,
             lunchSalad: day.lunchSalad,
+        }));
+
+        const dinnerRows = menu.map(day => ({
+            day: day.day,
             dinnerDryVeg: day.dinnerDryVeg,
             dinnerGravyVeg: day.dinnerGravyVeg,
             dinnerRice: day.dinnerRice,
@@ -78,9 +90,10 @@ export default function AdminPage() {
             dinnerSalad: day.dinnerSalad,
         }));
 
+        // 🥗 LUNCH TABLE
         autoTable(doc, {
-            head: [columns.map(col => col.header)],
-            body: rows.map(row => columns.map(col => row[col.dataKey])),
+            head: [lunchColumns.map(col => col.header)],
+            body: lunchRows.map(row => lunchColumns.map(col => row[col.dataKey])),
             startY: 70,
             styles: {
                 fontSize: 10,
@@ -101,23 +114,61 @@ export default function AdminPage() {
             tableWidth: "auto",
         });
 
+        // 🍛 DINNER TABLE (start after lunch table)
+        const finalY = doc.lastAutoTable.finalY + 40; // Adjust space between tables
+
+        doc.setFontSize(18);
+        doc.text("Dinner Menu", 40, finalY - 20);
+
+        autoTable(doc, {
+            head: [dinnerColumns.map(col => col.header)],
+            body: dinnerRows.map(row => dinnerColumns.map(col => row[col.dataKey])),
+            startY: finalY,
+            styles: {
+                fontSize: 10,
+                cellPadding: 8,
+                halign: "center",
+                valign: "middle",
+            },
+            headStyles: {
+                fillColor: [76, 175, 80], // greenish
+                textColor: 255,
+                fontStyle: "bold",
+            },
+            alternateRowStyles: {
+                fillColor: [240, 255, 240],
+            },
+            margin: { left: 40, right: 40 },
+            theme: "grid",
+            tableWidth: "auto",
+        });
+
         doc.save("WeeklyMenu.pdf");
+
+        try {
+            const response = await axios.post("http://localhost:4000/api/menu", {
+                Menu: menu,
+            });
+        } catch (error) {
+            toast.error("Error Occurred");
+        }
     };
 
     const onClickFeedback = async () => {
         const response = await axios.get("http://localhost:4000/api/feedback");
         console.log(response.data.response);
         setFeedback(response.data.response);
+        setVisible(true);
     };
 
     useEffect(() => {
         onClickFeedback();
     }, []);
 
-    return (
-        <div className="flex min-h-screen bg-gradient-to-r from-purple-100 to-indigo-100 font-sans">
+    return ( // overflow-hidden is very important
+        <div className="flex h-screen bg-gradient-to-r from-purple-100 to-indigo-100 font-sans overflow-hidden">
             {/* Sidebar */}
-            <aside className="w-64 bg-white shadow-xl rounded-r-3xl p-6">
+            <aside className="w-64 h-140 mb-3 bg-white shadow-xl rounded-r-3xl p-6 mt-10">
                 <h2 className="text-2xl font-bold mb-6 text-indigo-700">Admin Panel</h2>
                 <div className="flex flex-col gap-4">
                     <button
@@ -136,9 +187,9 @@ export default function AdminPage() {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-6 overflow-y-auto">
+            <div className="flex-1 p-6 h-screen overflow-y-auto   mt-4.5 ">
                 {tab === "edit" && (
-                    <div className="space-y-6">
+                    <div className="space-y-6 ">
                         <div className="bg-white shadow-md rounded-xl p-6 space-y-6">
                             <h3 className="text-2xl font-semibold text-indigo-700 text-center">
                                 {menu[currentDayIndex].day}
@@ -217,32 +268,38 @@ export default function AdminPage() {
 
 
                 {tab === "feedback" ? (
-                    feedback.map((item, index) => (
-                        <div
-                            key={index}
-                            className="bg-white shadow-md hover:shadow-xl transition-shadow duration-300 rounded-2xl p-6 m-4 border border-gray-100"
-                        >
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center">
-                                    <div className="bg-indigo-100 text-indigo-600 font-bold rounded-full h-10 w-10 flex items-center justify-center uppercase">
-                                        {item.name?.charAt(0) || "U"}
+                    visible ? <div className="">
+                        {feedback.map((item, index) => (
+                            <div
+                                key={index}
+                                className="bg-white shadow-md hover:shadow-xl transition-shadow duration-300 rounded-2xl p-6 m-4 border border-gray-100"
+                            >
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center">
+                                        <div className="bg-indigo-100 text-indigo-600 font-bold rounded-full h-10 w-10 flex items-center justify-center uppercase">
+                                            {item.name?.charAt(0) || "U"}
+                                        </div>
+                                        <div className="ml-4">
+                                            <p className="text-sm text-gray-700 font-medium">{item.name || "Anonymous"}</p>
+                                            <p className="text-xs text-gray-400">Shared their experience</p>
+                                        </div>
                                     </div>
-                                    <div className="ml-4">
-                                        <p className="text-sm text-gray-700 font-medium">{item.name || "Anonymous"}</p>
-                                        <p className="text-xs text-gray-400">Shared their experience</p>
+                                    <div className="text-xs text-gray-400">
+                                        {item.date}
                                     </div>
                                 </div>
-                                <div className="text-xs text-gray-400">
-                                    {item.date}
-                                </div>
+                                <p className="text-gray-800 text-base leading-relaxed italic">"{item.feedback}"</p>
                             </div>
-                            <p className="text-gray-800 text-base leading-relaxed italic">"{item.feedback}"</p>
-                        </div>
-                    ))
+                        ))}
+                    </div> : <div className="grid place-items-center h-screen">
+                        <div className="w-14 h-14 place-self-center border-4 border-gray-400 border-t-blue-800 rounded-full animate-spin"></div>
+                    </div>
+
+
                 ) : (
                     null
                 )}
-            </main>
+            </div>
         </div>
     );
 }

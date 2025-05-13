@@ -1,40 +1,75 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { nameContext } from "./UserLogin";
 import { ContextAPI } from "./Context";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const UserPage = () => {
-    const {name} = useContext(ContextAPI);
+    const { name,pdfUrl } = useContext(ContextAPI);
     const [rating, setRating] = useState(0);
-    const[feedback,setFeedback] = useState("");
-    
-    const onSubmitHandler = async(e)=>{
+    const [feedback, setFeedback] = useState("");
+    const [called, setCalled] = useState(false);
+    const [TodaysMenu, setTodaysMenu] = useState({});
+    const day = new Date().getDay();
+    console.log(day);
+    const MenuData = async () => {
+        
+        console.log("controll is here")
+        try {
+            console.log("controll is here11")
+            const response = await axios.get("http://localhost:4000/api/menu");
+            console.log("controll is here22")
+            const Menu = response.data.response;
+            console.log(Menu);
+            //console.log(response.data.response[1]);
+            //setTodaysMenu(Menu)
+            for (let i = 0; i < Menu.length; i++) {
+                if (i == (day-1)) {
+                    setTodaysMenu(Menu[i]);
+                    console.log(Menu[i]);
+                    break;
+                }
+            }
+
+        } catch (error) {
+            toast.error("Error occur in ")
+        }
+        console.log(TodaysMenu);
+
+
+    }
+    useEffect(() => {
+        if (!called) {
+            MenuData();
+            setCalled(true);
+        }
+    }, [called]);
+    const onSubmitHandler = async (e) => {
         e.preventDefault();
         try {
             console.log("hi controll is here");
             const date = new Date().toLocaleString();
-            const response = await axios.post("http://localhost:4000/api/feedback",{
-                Feedback:feedback,
-                Name:name,
-                date:date
+            const response = await axios.post("http://localhost:4000/api/feedback", {
+                Feedback: feedback,
+                Name: name,
+                date: date
             })
             console.log(feedback);
-            if(response.data.success){
+            if (response.data.success) {
 
                 //toast.success("Feedback Submitted..!");
-                
+
                 setFeedback("");
                 alert("Feedback submitted")
-            }else{
+            } else {
                 toast.error("Error Occured in the feedback thing")
             }
         } catch (error) {
             toast.error("Error Occured");
         }
-        
+
     }
-    
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 py-8 px-4">
             <div className="max-w-4xl mx-auto space-y-8">
@@ -50,9 +85,9 @@ const UserPage = () => {
                 <div className="bg-white rounded-2xl shadow-lg p-6 transition hover:shadow-xl mt-6">
                     <h2 className="text-2xl font-semibold mb-3 text-green-700">📄 Weekly Menu</h2>
                     <a
-                        //href={}
-                            
-                        className="text-blue-600 hover:text-blue-800 underline text-lg"
+                        href={pdfUrl}
+
+                        className="text-blue-600 hover:text-blue-800 underline text-lg cursor-pointer"
                     >
                         Download this week’s menu (PDF)
                     </a>
@@ -61,19 +96,31 @@ const UserPage = () => {
 
                 {/* Today's Menu */}
                 <div className="bg-white rounded-2xl shadow-lg p-6 transition hover:shadow-xl">
-                    <h2 className="text-2xl font-semibold mb-3 text-green-700">🍛 Today’s Menu</h2>
+                    <h2 className="text-2xl font-semibold mb-3 text-green-700">🍛 Today’s Menu ({TodaysMenu.day})</h2>
                     <div className="grid md:grid-cols-3 gap-4 text-gray-700">
                         <div>
                             <h3 className="font-bold">Breakfast</h3>
-                            <p>Idli, Sambhar, Coconut Chutney</p>
+                            <p>{TodaysMenu.breakfast}</p>
                         </div>
                         <div>
                             <h3 className="font-bold">Lunch</h3>
-                            <p>Dal Fry, Jeera Rice, Mixed Veg</p>
+                            <p className="font-medium" >{TodaysMenu.lunchChapati}</p>
+                            <p className="font-medium">{TodaysMenu.lunchDal}</p>
+                            <p className="font-medium">{TodaysMenu.lunchDryVeg}</p>
+                            <p className="font-medium">{TodaysMenu.lunchGravyVeg}</p>
+                            <p className="font-medium">{TodaysMenu.lunchRice}</p>
+                            <p className="font-medium">{TodaysMenu.lunchSalad}</p>
+
                         </div>
                         <div>
                             <h3 className="font-bold">Dinner</h3>
-                            <p>Roti, Chole, Salad, Curd</p>
+                            <p className="font-medium" >{TodaysMenu.dinnerChapati}</p>
+                            <p className="font-medium">{TodaysMenu.dinnerDal}</p>
+                            <p className="font-medium">{TodaysMenu.dinnerDryVeg}</p>
+                            <p className="font-medium">{TodaysMenu.dinnerGravyVeg}</p>
+                            <p className="font-medium">{TodaysMenu.dinnerRice}</p>
+                            <p className="font-medium">{TodaysMenu.dinnerSalad}</p>
+
                         </div>
                     </div>
                 </div>

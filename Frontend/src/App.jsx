@@ -11,6 +11,7 @@ const App = ()=>{
   return (
     <div>
       <ToastContainer/>
+      
       <Routes>
         <Route path="/" element = {<LandingPage/>}></Route>
         <Route path="/student-login" element={<UserLogin/>}></Route>

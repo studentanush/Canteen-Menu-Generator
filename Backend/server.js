@@ -3,7 +3,7 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import connectMB from "./src/connectMB.js";
-import { adminModel, feedbackModel, userModel } from "./src/database.js";
+import { adminModel, feedbackModel, MenuDataModel, userModel } from "./src/database.js";
 const JWT_SECRET = "i Love *****";
 const app = express();
 app.use(express.json());
@@ -29,19 +29,19 @@ app.post("/api/userlogin", async (req, res) => {
                     id: user._id.toString(),
                 }, JWT_SECRET);
                 res.json({
-                    Name:Name,
+                    Name: Name,
                     token: token,
-                    user:true
+                    user: true
                 })
             } else {
                 res.json({
                     message: "Invalid credentials",
-                    user:false
+                    user: false
                 })
             }
         } else {
             res.json({
-                
+
                 msg: "user not found"
             })
         }
@@ -63,7 +63,7 @@ app.post("/api/usersignup", async (req, res) => {
     console.log(alreadyexist);
     if (alreadyexist != null) {
         res.json({
-            alreadyexist:true
+            alreadyexist: true
         })
         console.log("user already exist")
     } else {
@@ -83,7 +83,7 @@ app.post("/api/usersignup", async (req, res) => {
             msg: error
         }
         res.json({
-            alreadyexist:false,
+            alreadyexist: false,
             msg: "sign up successfull"
         })
     }
@@ -105,28 +105,28 @@ app.post("/api/adminlogin", async (req, res) => {
     })
 
 })
-app.post("/api/feedback",async(req,res)=>{
+app.post("/api/feedback", async (req, res) => {
     const Feedback = req.body.Feedback;
     const Name = req.body.Name;
     const date = req.body.date;
     console.log(Feedback);
     try {
         await feedbackModel.create({
-            feedback:Feedback,
-            name:Name,
-            date:date
+            feedback: Feedback,
+            name: Name,
+            date: date
         })
         res.json({
-            success:true,
+            success: true,
         })
     } catch (error) {
         res.json({
-            success:false,
+            success: false,
         })
     }
-    
+
 })
-app.get("/api/feedback",async(req,res)=>{
+app.get("/api/feedback", async (req, res) => {
     const response = await feedbackModel.find({});
     console.log(response);
     res.json({
@@ -134,6 +134,37 @@ app.get("/api/feedback",async(req,res)=>{
     })
 
 
+})
+app.post("/api/menu", async (req, res) => {
+    try {
+        const Menu = req.body.Menu;
+        //console.log(Menu);
+        await MenuDataModel.create({
+            menu: Menu
+        })
+    } catch (error) {
+        res.json({
+            msg:"error occur"
+        })
+    }
+
+
+})
+app.get("/api/menu",async (req,res)=>{
+    const response = await MenuDataModel.findOne({
+        
+    });
+    res.json({
+        response:response.menu
+    })
+    
+    
+    console.log(response);
+    
+})
+app.delete("/api/menu",async(req,res)=>{
+    console.log("HIHIHIH")
+    await MenuDataModel.deleteMany({});
 })
 
 app.listen(PORT, () => console.log(`server started on ${PORT}`));

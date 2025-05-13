@@ -30,10 +30,10 @@ export default function UserSignup() {
             if (!response.data.alreadyexist  ) {
 
                 navigate("/student-login");
-                toast.success("sign up successfull");
+                toast.success("Sign up Successfull");
 
             } else {
-                toast.error("User already exits..")
+                toast.error("User already exits..😶")
             }
             setName("");
             setEmail("");

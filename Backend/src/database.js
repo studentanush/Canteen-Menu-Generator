@@ -14,11 +14,16 @@ const feedbackSchema = new Schema({
     name:{type:String,required:true},
     date:{type:String}
 })
+const MenuDataSchema = new Schema({
+    menu:{type:Array}
+})
 const userModel = mongoose.model("user",userSchema);
 const adminModel = mongoose.model("admin",adminSchema);
 const feedbackModel = mongoose.model("feedback",feedbackSchema);
+const MenuDataModel = mongoose.model("menuData",MenuDataSchema);
 export  {
     userModel,
     adminModel,
-    feedbackModel
+    feedbackModel,
+    MenuDataModel
 }
