@@ -3,13 +3,14 @@ import { nameContext } from "./UserLogin";
 import { ContextAPI } from "./Context";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { images } from "../assets/images";
 const UserPage = () => {
     const { name,pdfUrl } = useContext(ContextAPI);
     const [rating, setRating] = useState(0);
     const [feedback, setFeedback] = useState("");
     const [called, setCalled] = useState(false);
     const [TodaysMenu, setTodaysMenu] = useState({});
+    
     const day = new Date().getDay();
     console.log(day);
     const MenuData = async () => {
@@ -100,9 +101,10 @@ const UserPage = () => {
                     <div className="grid md:grid-cols-3 gap-4 text-gray-700">
                         <div>
                             <h3 className="font-bold">Breakfast</h3>
-                            <p>{TodaysMenu.breakfast}</p>
+                            <p className="font-medium">{TodaysMenu.breakfast}</p>
+                            <img className="w-30 h-30 rounded-2xl shadow-lg object-cover transition-transform duration-300 ease-in-out hover:scale-105 mt-2" src={images[TodaysMenu.breakfast]} alt="" />
                         </div>
-                        <div>
+                        <div> 
                             <h3 className="font-bold">Lunch</h3>
                             <p className="font-medium" >{TodaysMenu.lunchChapati}</p>
                             <p className="font-medium">{TodaysMenu.lunchDal}</p>

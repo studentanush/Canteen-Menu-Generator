@@ -6,7 +6,7 @@ import autoTable from "jspdf-autotable";
 import { toast } from "react-toastify";
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-const breakfastOptions = ["Idli", "Dosa", "Poha", "Paratha", "Upma", "Bread Omelette"];
+const breakfastOptions = ["Idli", "Dosa", "Poha", "Paratha", "Upma", "Bread_Omlette"];
 
 export default function AdminPage() {
     const { setPdfUrl } = useContext(ContextAPI)
@@ -146,6 +146,7 @@ export default function AdminPage() {
         doc.save("WeeklyMenu.pdf");
 
         try {
+            //await axios.delete("http://localhost:4000/api/menu");
             const response = await axios.post("http://localhost:4000/api/menu", {
                 Menu: menu,
             });
