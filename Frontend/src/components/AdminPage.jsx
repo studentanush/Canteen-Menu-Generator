@@ -146,7 +146,7 @@ export default function AdminPage() {
         doc.save("WeeklyMenu.pdf");
 
         try {
-            //await axios.delete("http://localhost:4000/api/menu");
+            await axios.delete("http://localhost:4000/api/menu");
             const response = await axios.post("http://localhost:4000/api/menu", {
                 Menu: menu,
             });

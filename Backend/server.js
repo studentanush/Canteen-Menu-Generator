@@ -163,8 +163,12 @@ app.get("/api/menu",async (req,res)=>{
     
 })
 app.delete("/api/menu",async(req,res)=>{
-    console.log("HIHIHIH")
-    await MenuDataModel.deleteMany({});
+   try {
+        await MenuDataModel.deleteMany({});
+        res.status(200).json({ msg: "All menus deleted" });
+    } catch (error) {
+        res.status(500).json({ msg: "Error during deletion", error });
+    }
 })
 
 app.listen(PORT, () => console.log(`server started on ${PORT}`));
