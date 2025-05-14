@@ -11,6 +11,18 @@ A full-stack web application that simplifies weekly menu management and feedback
 - 🔐 Role-based access for user and admin panels.
 
 ---
+## 📱 Landing Page
+
+The **Landing Page** contains two primary login options:
+
+- **Student Login**: For students to access the weekly menu, rate meals, and submit feedback.
+- **Admin Login**: For admins to generate and manage the weekly menu, view feedback from students, and manage other functionalities.
+
+### 🖼️ Screenshot of the Landing Page
+
+![Landing Page](assets/landing-page.png)
+
+---
 
 ## 👨‍🍳 User Page
 
