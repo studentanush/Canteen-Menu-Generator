@@ -20,7 +20,7 @@ The **Landing Page** contains two primary login options:
 
 ### 🖼️ Screenshot of the Landing Page
 
-![Landing Page](assets/landing-page.png)
+![Landing Page](.\src\assets\LandingPage.png)
 
 ---
 
@@ -35,7 +35,7 @@ The user-facing portal allows students and staff to:
 
 ### 🔍 Screenshot: User Page
 
-![UserPage Screenshot](./screenshots/userpage.png)
+![UserPage Screenshot](.\src\assets\UserPage.png)
 
 ---
 
@@ -51,7 +51,7 @@ The admin portal contains a sidebar with two powerful tools:
 
 #### 📷 Screenshot: Menu Generator
 
-![Admin Menu Generator](./screenshots/admin-edit.png)
+![Admin Menu Generator](.\src\assets\AdminEdit.png)
 
 ---
 
@@ -62,7 +62,7 @@ The admin portal contains a sidebar with two powerful tools:
 
 #### 📷 Screenshot: Feedback Section
 
-![Admin Feedback Viewer](./screenshots/admin-feedback.png)
+![Admin Feedback Viewer](.\src\assets\AdminFeedback.png)
 
 ---
 
