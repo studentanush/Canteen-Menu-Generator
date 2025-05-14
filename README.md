@@ -101,5 +101,11 @@ npm install axios bcrypt cors jsonwebtoken mongoose nodemon express mime
 ```
 
 ### Start both servers (run in separate terminals or use concurrently)
-npm run server   # for Backend
-npm run dev   # for Frontend 
+#### for Backend
+```bash
+ npm run server
+```
+#### for Frontend 
+```bash
+npm run dev
+```  
