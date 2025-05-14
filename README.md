@@ -20,7 +20,7 @@ The **Landing Page** contains two primary login options:
 
 ### 🖼️ Screenshot of the Landing Page
 
-![Landing Page](Frontend\src\assets\LandingPage.png)
+![Landing Page](Frontend/src/assets/LandingPage.png)
 
 ---
 
@@ -35,7 +35,7 @@ The user-facing portal allows students and staff to:
 
 ### 🔍 Screenshot: User Page
 
-![UserPage Screenshot](.\src\assets\UserPage.png)
+![UserPage Screenshot](Frontend/src/assets/UserPage.png)
 
 ---
 
@@ -51,7 +51,7 @@ The admin portal contains a sidebar with two powerful tools:
 
 #### 📷 Screenshot: Menu Generator
 
-![Admin Menu Generator](.\src\assets\AdminEdit.png)
+![Admin Menu Generator](Frontend/src/assets/AdminEdit.png)
 
 ---
 
@@ -62,7 +62,7 @@ The admin portal contains a sidebar with two powerful tools:
 
 #### 📷 Screenshot: Feedback Section
 
-![Admin Feedback Viewer](.\src\assets\AdminFeedback.png)
+![Admin Feedback Viewer](Frontend/src/assets/AdminFeedback.png)
 
 ---
 
@@ -101,5 +101,11 @@ npm install axios bcrypt cors jsonwebtoken mongoose nodemon express mime
 ```
 
 ### Start both servers (run in separate terminals or use concurrently)
-npm run server   # for Backend
-npm run dev   # for Frontend 
+#### for Backend
+```bash
+ npm run server
+```
+#### for Frontend 
+```bash
+npm run dev
+```  
