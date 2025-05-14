@@ -20,7 +20,7 @@ The **Landing Page** contains two primary login options:
 
 ### 🖼️ Screenshot of the Landing Page
 
-![Landing Page](.\src\assets\LandingPage.png)
+![Landing Page](Frontend\src\assets\LandingPage.png)
 
 ---
 
