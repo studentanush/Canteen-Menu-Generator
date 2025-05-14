@@ -66,15 +66,28 @@ The admin portal contains a sidebar with two powerful tools:
 
 ## 📦 Setup Instructions
 
+
+### Clone the repo
 ```bash
-# Clone the repo
 git clone https://github.com/studentanush/Canteen-Menu-Generator.git
+```
+```bash
 cd Canteen-Menu-Generator
+```
+### Install frontend and backend dependencies
+``` bash
+ cd Frontend
+```
+```bash
+npm install axios jspdf jspdf-autotable react-router-dom tailwindcss react-toastify
+```
+```bash
+cd Backend
+```
+```bash
+npm install axios bcrypt cors jsonwebtoken mongoose nodemon express mime
+```
 
-# Install frontend and backend dependencies
-cd Frontend && npm install axios jspdf jspdf-autotable react-router-dom tailwindcss react-toastify 
-cd Backend && npm install axios bcrypt cors jsonwebtoken mongoose nodemon express mime
-
-# Start both servers (run in separate terminals or use concurrently)
+### Start both servers (run in separate terminals or use concurrently)
 npm run server   # for Backend
 npm run dev   # for Frontend 
