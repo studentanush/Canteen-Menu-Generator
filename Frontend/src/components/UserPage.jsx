@@ -105,7 +105,7 @@ const UserPage = () => {
                             <img className="w-30 h-30 rounded-2xl shadow-lg object-cover transition-transform duration-300 ease-in-out hover:scale-105 mt-2" src={images[TodaysMenu.breakfast]} alt="" />
                         </div>
                         <div> 
-                            <h3 className="font-bold">Lunch</h3>
+                            <h3 className="font-bold">Lunch</h3>    
                             <p className="font-medium" >{TodaysMenu.lunchChapati}</p>
                             <p className="font-medium">{TodaysMenu.lunchDal}</p>
                             <p className="font-medium">{TodaysMenu.lunchDryVeg}</p>

@@ -167,7 +167,7 @@ export default function AdminPage() {
     }, []);
 
     return ( // overflow-hidden is very important
-        <div className="flex h-screen bg-gradient-to-r from-purple-100 to-indigo-100 font-sans overflow-hidden">
+        <div className="flex h-screen bg-gradient-to-r from-purple-100 to-indigo-100 font-sans overflow-hidden ">
             {/* Sidebar */}
             <aside className="w-64 h-140 mb-3 bg-white shadow-xl rounded-r-3xl p-6 mt-10">
                 <h2 className="text-2xl font-bold mb-6 text-indigo-700">Admin Panel</h2>
@@ -188,7 +188,7 @@ export default function AdminPage() {
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 p-6 h-screen overflow-y-auto   mt-4.5 ">
+            <div className="flex-1 p-6 h-screen overflow-y-auto   mt-2 ">
                 {tab === "edit" && (
                     <div className="space-y-6 ">
                         <div className="bg-white shadow-md rounded-xl p-6 space-y-6">
@@ -269,7 +269,7 @@ export default function AdminPage() {
 
 
                 {tab === "feedback" ? (
-                    visible ? <div className="">
+                    visible ? <div className=" mt-5">
                         {feedback.map((item, index) => (
                             <div
                                 key={index}
