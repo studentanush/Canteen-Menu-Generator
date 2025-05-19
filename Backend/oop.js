@@ -1,100 +1,112 @@
-// Base class representing a generic Meal
-// A class is like a blueprint for creating objects with similar properties and behaviors
+// Base Meal class representing any meal type
 class Meal {
-    // The constructor method initializes new objects created from this class
-    // Here we pass the type of meal (breakfast/lunch/dinner) and items (food details)
-    constructor(type, items) {
-        this.type = type;  // e.g., "lunch"
-        this.items = items; // an object containing food items, e.g., {Rice: "Jeera Rice", Dal: "Dal Fry"}
-    }
+  constructor() {
+    // We'll assign these properties after creating the object
+    this.type = "";   // Meal type like "Breakfast", "Lunch", "Dinner"
+    this.items = {};  // Details about the meal items
+  }
 
-    // A method (function inside class) to display meal details as a formatted string
-    display() {
-        // Object.entries(this.items) converts items object to array of [key, value] pairs
-        // We then map each pair to a string "key: value" and join them with commas
-        return `${this.type.toUpperCase()} includes: ${Object.entries(this.items)
-            .map(([key, value]) => `${key}: ${value}`)
-            .join(", ")}`;
+  // Method to display meal info as a string
+  showMeal() {
+    let details = this.type + " - ";
+    for (let key in this.items) {
+      details += key + ": " + this.items[key] + ", ";
     }
+    // Remove last comma and space
+    return details.slice(0, -2);
+  }
 }
 
-// Child class Lunch inherits from Meal
-// Inheritance means Lunch gets all properties/methods of Meal but can add or override some
+// Lunch inherits Meal
 class Lunch extends Meal {
-    constructor(items) {
-        // Calls the parent class constructor with "lunch" as type and items passed here
-        super("lunch", items);
-    }
-
-    // Override the display method to customize lunch-specific output
-    display() {
-        return "🍽️ LUNCH MENU → " + super.display(); // super.display() calls parent's display()
-    }
+  constructor() {
+    super();
+    this.type = "Lunch";
+  }
 }
 
-// Child class Dinner inherits from Meal
+// Dinner inherits Meal
 class Dinner extends Meal {
-    constructor(items) {
-        super("dinner", items);
-    }
-
-    display() {
-        return "🌙 DINNER MENU → " + super.display();
-    }
+  constructor() {
+    super();
+    this.type = "Dinner";
+  }
 }
 
-// Child class Breakfast inherits from Meal
+// Breakfast inherits Meal, only mainDish needed
 class Breakfast extends Meal {
-    // For breakfast, we only expect a mainDish string instead of many items
-    constructor(mainDish) {
-        // Create an items object with only one key 'mainDish'
-        const items = { mainDish };
-        super("breakfast", items);
-    }
-
-    display() {
-        return `🌅 BREAKFAST → ${this.items.mainDish}`;
-    }
+  constructor() {
+    super();
+    this.type = "Breakfast";
+  }
 }
 
-// Factory function demonstrating polymorphism:
-// Polymorphism means the same interface (createMeal) can create different types of meals
-function createMeal(type, items) {
-    switch (type) {
-        case "breakfast":
-            return new Breakfast(items.mainDish);
-        case "lunch":
-            return new Lunch(items);
-        case "dinner":
-            return new Dinner(items);
-        default:
-            return new Meal(type, items);
-    }
+// Create weekly meal data (simulate input)
+const weeklyMealsData = {
+  Monday: {
+    breakfast: "Idli Sambhar",
+    lunch: {
+      DryVeg: "Aloo Gobi",
+      GravyVeg: "Paneer Butter Masala",
+      Rice: "Jeera Rice",
+      Dal: "Dal Fry",
+      Chapati: "2",
+      Salad: "Cucumber",
+    },
+    dinner: {
+      DryVeg: "Cabbage",
+      GravyVeg: "Chana Masala",
+      Rice: "Steamed Rice",
+      Dal: "Dal Tadka",
+      Chapati: "3",
+      Salad: "Onion",
+    },
+  },
+  Tuesday: {
+    breakfast: "Dosa with Chutney",
+    lunch: {
+      DryVeg: "Bhindi",
+      GravyVeg: "Palak Paneer",
+      Rice: "Lemon Rice",
+      Dal: "Dal Makhani",
+      Chapati: "2",
+      Salad: "Tomato",
+    },
+    dinner: {
+      DryVeg: "Baingan",
+      GravyVeg: "Rajma",
+      Rice: "Steamed Rice",
+      Dal: "Toor Dal",
+      Chapati: "3",
+      Salad: "Onion",
+    },
+  },
+  // Add other days here...
+};
+
+// Get days array
+const days = Object.keys(weeklyMealsData);
+
+// Loop over each day
+for (let i = 0; i < days.length; i++) {
+  let day = days[i];
+  console.log("\n=== " + day + " ===");
+
+  // Create Breakfast object and assign mainDish
+  let breakfast = new Breakfast();
+  breakfast.items.mainDish = weeklyMealsData[day].breakfast;
+
+  // Create Lunch object and assign items
+  let lunch = new Lunch();
+  lunch.items = weeklyMealsData[day].lunch;
+
+  // Create Dinner object and assign items
+  let dinner = new Dinner();
+  dinner.items = weeklyMealsData[day].dinner;
+
+  // Print meal details
+  console.log(breakfast.showMeal());
+  console.log(lunch.showMeal());
+  console.log(dinner.showMeal());
 }
 
-// Create objects (instances) of different meals using the factory function
-const mondayLunch = createMeal("lunch", {
-    DryVeg: "Aloo Gobi",
-    GravyVeg: "Paneer Butter Masala",
-    Rice: "Jeera Rice",
-    Dal: "Dal Fry",
-    Chapati: "2",
-    Salad: "Cucumber"
-});
-
-const tuesdayDinner = createMeal("dinner", {
-    DryVeg: "Cabbage",
-    GravyVeg: "Chana Masala",
-    Rice: "Steamed Rice",
-    Dal: "Dal Tadka",
-    Chapati: "3",
-    Salad: "Onion"
-});
-
-const wednesdayBreakfast = createMeal("breakfast", {
-    mainDish: "Idli Sambhar"
-});
-
-// Demonstrate polymorphism: calling display() on different meal objects behaves differently
-const weeklyMeals = [mondayLunch, tuesdayDinner, wednesdayBreakfast];
-weeklyMeals.forEach(meal => console.log(meal.display()));
